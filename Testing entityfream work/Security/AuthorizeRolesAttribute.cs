@@ -32,7 +32,7 @@ namespace Testing_entityfream_work.Security
         }
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectResult("~/Home/UnAuthorized");
+           filterContext.Result = new RedirectResult("~/Home/UnAuthorized");
         }
     }
 }
