@@ -4,5 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>For Admins only</h2>
+
+<h1>For Admins Only</h1>
+<div id="divUserListConteiner">
+    @Html.Action("ManagerUserPartial", "Home");
+</div>
 
