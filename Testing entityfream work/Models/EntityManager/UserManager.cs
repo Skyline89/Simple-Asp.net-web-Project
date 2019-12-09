@@ -172,5 +172,73 @@ namespace Testing_entityfream_work.Models.EntityManager
             Udv.UserGenders = new UserGender { SelectGender = userGender, Gender = genders };
             return Udv;
         }
+        public void UpdateUserAccount(UserProfileView user)
+        {
+            using (TestDBEntities db = new TestDBEntities())
+            {
+                using (var dbContextTrasaction = db.Database.BeginTransaction())
+                { try {
+                        SYSUser Su = db.SYSUsers.Find(user.SYSUserID);
+                        Su.LoginName = user.LoginName;
+                        Su.PasswordEncryptedText = user.Password;
+                        Su.RowCreatedSYSUserID = user.SYSUserID;
+                        Su.RowModifiedSYSUserID = user.SYSUserID;
+                        Su.RowCreatedDateTime = DateTime.Now;
+                        Su.RowModifiedDateTime = DateTime.Now;
+                        db.SaveChanges();
+
+                        var userProfile = db.SysUserProfiles.Where(x => x.SYSUserID == user.SYSUserID);
+                        if (userProfile.Any())
+                        {
+                            SysUserProfile Sup = userProfile.FirstOrDefault();
+                            Sup.SYSUserID = Su.SYSUserID;
+                            Sup.FirstName = user.FirstName;
+                            Sup.LastName = user.LastName;
+                            Sup.Gender = user.Gender;
+                            Sup.RowCreatedSYSUserID = user.SYSUserID;
+                            Sup.RowModifiedSYSUserID = user.SYSUserID;
+                            Sup.RowCreatedDateTime = DateTime.Now;
+                            Sup.RowModifiedDateTime = DateTime.Now;
+
+                            db.SaveChanges();
+                        }
+                        if (user.LOOKUPRoleID > 0)
+                        {
+                            var userRole = db.SysUserRoles.Where(x => x.SYSUserID == user.SYSUserID);
+                            SysUserRole Sur = null;
+                            if (userRole.Any())
+                            {
+                                Sur = userRole.FirstOrDefault();
+                                Sur.LOOKUPRoleID = user.LOOKUPRoleID;
+                                Sur.SYSUserID = user.SYSUserID;
+                                Sur.IsActive = true;
+                                Sur.RowCreatedSYSUserID = user.SYSUserID;
+                                Sur.RowModifiedSYSUserID = user.SYSUserID;
+                                Sur.RowCreatedDateTime = DateTime.Now;
+                                Sur.RowModifiedDateTime = DateTime.Now;
+                            }
+                            else
+                            {
+                                Sur = new SysUserRole();
+                                Sur.LOOKUPRoleID = user.LOOKUPRoleID;
+                                Sur.SYSUserID = user.SYSUserID;
+                                Sur.IsActive = true;
+                                Sur.RowCreatedSYSUserID = user.SYSUserID;
+                                Sur.RowModifiedSYSUserID = user.SYSUserID;
+                                Sur.RowCreatedDateTime = DateTime.Now;
+                                Sur.RowModifiedDateTime = DateTime.Now;
+                                db.SysUserRoles.Add(Sur);
+                            }
+                            db.SaveChanges();
+                        }
+                        dbContextTrasaction.Commit();
+                    }
+                    catch
+                    {
+                        dbContextTrasaction.Rollback();
+                    }
+                }
+            }
+        }
     }
 }
