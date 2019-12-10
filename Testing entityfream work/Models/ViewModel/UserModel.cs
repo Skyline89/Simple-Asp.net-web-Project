@@ -26,4 +26,13 @@ namespace Testing_entityfream_work.Models.ViewModel
         public string LastName { get; set; }
         public string Gender { get; set; }
     }
+    public class UserMessage
+    {
+        public int MessageID { get; set; }
+        public int SYSUserID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MessageText { get; set; }
+        public  DateTime? LogDate { get; set; }
+    }
 }

@@ -12,8 +12,11 @@ namespace Testing_entityfream_work.Controllers
     public class HomeController : Controller
     {
         // GET: Home
+        [Authorize]
         public ActionResult Index()
         {
+            UserManager Um = new UserManager();
+            ViewBag.UserID = Um.GetUserId(User.Identity.Name);
             return View();
         }
         [Authorize]
@@ -91,6 +94,24 @@ namespace Testing_entityfream_work.Controllers
                 ViewBag.Status = "Update Sucessfull";
             }
             return View(profile);
+        }
+        [Authorize]
+        public ActionResult ShoutBoxPartial()
+        {
+            return PartialView();
+        }
+        [Authorize]
+        public ActionResult SendMessageint(int userID, string message)
+        {
+            UserManager Um = new UserManager();
+            Um.AddMessage(userID, message);
+            return Json(new { success = true });
+        }
+        [Authorize]
+        public ActionResult GetMessage()
+        {
+            UserManager Um = new UserManager();
+            return Json(Um.GetAllMessages(), JsonRequestBehavior.AllowGet);
         }
     }   
 }

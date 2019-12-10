@@ -285,6 +285,9 @@
     <Compile Include="Models\DB\LOOKUPRole.cs">
       <DependentUpon>Model_One.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DB\Message.cs">
+      <DependentUpon>Model_One.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DB\Model_One.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -346,6 +349,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\EditProfile.cshtml" />
+    <Content Include="Views\Home\ShoutBoxPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

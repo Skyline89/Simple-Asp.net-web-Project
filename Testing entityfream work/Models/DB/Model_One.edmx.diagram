@@ -12,6 +12,7 @@
         <AssociationConnector Association="TestDBModel.FK__SysUserRo__LOOKU__48CFD27E" ManuallyRouted="false" />
         <AssociationConnector Association="TestDBModel.FK__SysUserPr__SYSUs__4316F928" ManuallyRouted="false" />
         <AssociationConnector Association="TestDBModel.FK__SysUserRo__SYSUs__49C3F6B7" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TestDBModel.Message" Width="1.5" PointX="1.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

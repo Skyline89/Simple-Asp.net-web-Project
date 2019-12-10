@@ -306,5 +306,44 @@ namespace Testing_entityfream_work.Models.EntityManager
             }
             return Upv;
         }
+        public List<UserManager> GetAllMessages()
+        {
+            using (TestDBEntities db = new TestDBEntities())
+            {
+                var m = (from q in db.SYSUsers
+                         join q1 in db.Messages on q.SYSUserID equals q1.SYSUserID
+                         join q2 in db.SysUserProfiles on q.SYSUserID equals q2.SYSUserID
+                         select new UserMessage
+                         {
+                             MessageID = q1.MessageID,
+                             SYSUserID = q.SYSUserID,
+                             FirstName = q2.FirstName,
+                             LastName = q2.LastName,
+                             MessageText = q1.MessageText,
+                             LogDate = q2.DatePosted
+                         }).OrderBy(o => o.LogDate);
+                return m.Tolist();
+            }
+        }
+        public void AddMessage(int userID, string messageText)
+        {
+            using (TestDBEntities db = new TestDBEntities())
+            {
+                Message m = new Message();
+                m.MessageText = messageText;
+                m.SYSUserID = userID;
+                m.DatePosted = DateTime.UtcNow;
+
+                db.Messages.Add(m);
+                db.SaveChanges();
+            }
+        }
+        public int GetUserId(string loginName)
+        {
+            using (TestDBEntities db = new TestDBEntities())
+            {
+                return db.SYSUsers.Where(o => o.LoginName.Equals(loginName)).SingleOrDefault().SYSUserID;
+            }
+        }
     }
 }

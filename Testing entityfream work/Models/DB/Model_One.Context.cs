@@ -29,11 +29,6 @@ namespace Testing_entityfream_work.Models.DB
         public virtual DbSet<SYSUser> SYSUsers { get; set; }
         public virtual DbSet<SysUserProfile> SysUserProfiles { get; set; }
         public virtual DbSet<SysUserRole> SysUserRoles { get; set; }
-
-        public System.Data.Entity.DbSet<Testing_entityfream_work.Models.ViewModel.UserSignUpView> UserSignUpViews { get; set; }
-
-        public System.Data.Entity.DbSet<Testing_entityfream_work.Models.ViewModel.UserLoginView> UserLoginViews { get; set; }
-
-        public System.Data.Entity.DbSet<Testing_entityfream_work.Models.ViewModel.UserProfileView> UserProfileViews { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
     }
 }
