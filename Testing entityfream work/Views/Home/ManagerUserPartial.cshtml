@@ -1,38 +1,166 @@
 ﻿@model Testing_entityfream_work.Models.ViewModel.UserDataView
 
+
+
 <div>
-    <h1>List of Users</h1>
-    <span class="alert-success">@ViewBag.Massage </span>
-    <table class="table table-striped table-condensed table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Login ID</th>
-                <th>Password</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Gender</th>
-                <th colspan="2">Role</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var i in Model.UserProfile)
-            {
-            <tr>
-                <td>@Html.DisplayFor(m => i.SYSUserID)</td>
-                <td>@Html.DisplayFor(m => i.LoginName)</td>
-                <td>@Html.DisplayFor(m => i.Password)</td>
-                <td>@Html.DisplayFor(m => i.FirstName)</td>
-                <td>@Html.DisplayFor(m => i.LastName)</td>
-                <td>@Html.DisplayFor(m => i.Gender)</td>
-                <td>@Html.DisplayFor(m => i.RoleName)</td>
-                <td>@Html.DisplayFor(m => i.LOOKUPRoleID)</td>
-                <td><a href="javascript:void(0)" class="lnkEdit">Edit</a></td>
-                <td><a href="javascript:void(0)" class="lnkDelete">Delete</a></td>
-            </tr>
+   <h1>List of Users</h1>
+   <span class="alert-success">@ViewBag.Message</span>
+      <table class="table table-striped table-condensed table-hover">
+         <thead>
+           <tr>
+            <th>ID</th>
+            <th>Login ID</th>
+            <th>Password</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th colspan="2">Role</th>
+            <th></th>
+            <th></th>
+           </tr>
+         </thead>
+         <tbody>
+           @foreach (var i in Model.UserProfile)
+             {
+              <tr>
+                <td> @Html.DisplayFor(m => i.SYSUserID)</td>
+                <td> @Html.DisplayFor(m => i.LoginName)</td>
+                <td> @Html.DisplayFor(m => i.Password)</td>
+                <td> @Html.DisplayFor(m => i.FirstName)</td>
+                <td> @Html.DisplayFor(m => i.LastName)</td>
+                <td> @Html.DisplayFor(m => i.Gender)</td>
+                <td> @Html.DisplayFor(m => i.RoleName)</td>
+                <td> @Html.HiddenFor(m => i.LOOKUPRoleID)</td>
+                <td><a href="javacript:void(0)" class="lnkEdit">Edit</a></td>
+                <td><a href="javacript:void(0)" class="lnkDelete">Delete</a></td>
+              </tr>
             }
-        </tbody>
+         </tbody>
+      </table>
+</div>
+
+
+
+
+
+
+<div id="divEdit" style="display:none">
+    <span class="alert alert-success"></span>
+    <input type="hidden" id="hidID" />
+    <table>
+        <tr>
+            <td>LoginName</td>
+            <td><input type="text" id="txtLoginName" class="from-control" /></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="text" id="txtPassword" class="from-control" /></td>
+        </tr>
+        <tr>
+            <td>FirstName</td>
+            <td><input type="text" id="txtFirstName" class="from-control" /></td>
+        </tr>
+        <tr>
+            <td>LastName</td>
+            <td><input type="text" id="txtLastName" class="from-control" /></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td>@Html.DropDownListFor(x => x.UserGenders.SelectGender,
+                    new SelectList(Model.UserGenders.Gender,"Value","Text"),
+                    "",
+                    new { id = "ddlGender", @class="from-control" })
+            </td>
+        </tr>
+        <tr>
+            <td>Role</td>
+            <td>@Html.DropDownListFor(x => x.UserRoles.SelectedRoleID,
+                        new SelectList(Model.UserRoles.UserRoleList, "LOOKUPRoleID", "RoleName"),
+                        "",
+                        new{ id = "ddlRoles", @class="from-control" })
+            </td>
+        </tr>
     </table>
 </div>
+    
+
+<script type="text/javascript">
+        $(function () {
+            var initDialog = function (type) {
+                var title = type;
+                $("#divEdit").dialog({
+                    autoOpen: false,
+                    modal: true,
+                    title: type + 'User',
+                    width: 360,
+                    buttons: {
+                        Save: function () {
+                            var id = $("#hidID").val();
+                            var role = $("#ddlRoles").val();
+                            var loginName = $("#txtLoginName").val();
+                            var loginPass = $("#txtPassword").val();
+                            var fName = $("#txtFirstName").val();
+                            var lName= $("#txtLastName").val();
+                            var gender= $("#ddlGender").val();
+
+                            UpdateUser(id, loginName, loginPass, fName, lName, gender, role);
+                            $(this).dialog("destroy");
+                        },
+                        Cancel: function () { $(this).dialog("destroy"); }
+                    }
+                });
+            }
+            function UpdateUser(id, logName, logPass, fName, lName, gender, role) {
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateUserData", "Home"))",
+                    data: {
+                        userID: id, loginName: logName, password: logPass, firstName: fName,
+                        lastName: lName, gender: gender, roleID: role
+                    }, success: function (data) {
+                        $("#divUserListContainer").load("@(Url.Action("ManagerUserPartial", "Home", new { status = "update" }))");
+                    },
+                    error: function (error) {// to do:
+                    }
+
+                });
+            }
+            $("a.lnkEdit").on("click", function () {
+                initDialog("Edit");
+                $(".alert-success").empty();
+                var row = $(this).closest('tr');
+
+                $("#hidID").val(row.find("td:eq(0)").html().trim());
+                $("#txtLoginName").val(row.find("td:eq(1)").html().trim())
+                $("#txtPassword").val(row.find("td:eq(2)").html().trim())
+                $("#FirstName").val(row.find("td:eq(3)").html().trim())
+                $("#LastName").val(row.find("td:eq(4)").html().trim())
+                $("#dllGender").val(row.find("td:eq(5)").html().trim())
+                $("#dllRoles").val(row.find("td:eq(7)>input").html().trim());
+
+                $("#divEdit").dialog("open");
+                return false;
+            });
+        });
+</script>
+<script type="text/javascript">
+    function DeleteUser(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("DeleteUser","Home"))",
+                    data: { userID: id },
+                    success: function (data)
+                    {
+                        $("#divUserListContainer").load("@(Url.Action("ManageUserPartial","Home", new { status ="delete" }))");
+                    },
+                    error: function (error) { }
+                });
+    }
+    $("a.lnkDelete").on("click", function () {
+         var row = $(this).closest('tr');
+         var id = row.find("td:eq(0)").html().trim();
+         var answer = confirm("You are about to delete this user with ID " + id + " . Continue?");
+         if (answer) DeleteUser(id);
+             return false;
+    });
+</script>
