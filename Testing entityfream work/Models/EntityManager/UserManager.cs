@@ -311,18 +311,18 @@ namespace Testing_entityfream_work.Models.EntityManager
             using (TestDBEntities db = new TestDBEntities())
             {
                 var m = (from q in db.SYSUsers
-                         join q1 in db.Messages on q.SYSUserID equals q1.SYSUserID
-                         join q2 in db.SysUserProfiles on q.SYSUserID equals q2.SYSUserID
+                         join q2 in db.Messages on q.SYSUserID equals q2.SYSUserID
+                         join q3 in db.SysUserProfiles on q.SYSUserID equals q3.SYSUserID
                          select new UserMessage
                          {
-                             MessageID = q1.MessageID,
+                             MessageID = q2.MessageID,
                              SYSUserID = q.SYSUserID,
-                             FirstName = q2.FirstName,
-                             LastName = q2.LastName,
-                             MessageText = q1.MessageText,
-                             LogDate = q2.DatePosted
+                             FirstName = q3.FirstName,
+                             LastName = q3.LastName,
+                             MessageText = q2.MessageText,
+                             LogDate = q3.DatePosted
                          }).OrderBy(o => o.LogDate);
-                return m.Tolist();
+               return m.ToList();
             }
         }
         public void AddMessage(int userID, string messageText)

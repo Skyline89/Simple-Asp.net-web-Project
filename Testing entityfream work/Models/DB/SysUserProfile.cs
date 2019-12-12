@@ -14,6 +14,8 @@ namespace Testing_entityfream_work.Models.DB
     
     public partial class SysUserProfile
     {
+        internal readonly DateTime? DatePosted;
+
         public int SYSUserProfileID { get; set; }
         public int SYSUserID { get; set; }
         public string FirstName { get; set; }
